@@ -1,0 +1,17 @@
+<package>
+  <description brief="additional_dwa_plugins">
+
+     additional_dwa_plugins
+
+  </description>
+  <author>monolith</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/additional_dwa_plugins</url>
+  <depend package="roscpp"/>
+  <depend package="dwa_local_planner"/>
+  <depend package="pluginlib"/>
+
+</package>
+
+
