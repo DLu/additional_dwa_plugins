@@ -5,7 +5,7 @@ using base_local_planner::Trajectory;
 
 namespace dwa_plugins {
 
-class MinimizeY : public dwa_local_planner::TrajectoryCostFunction {
+class MinimizeYCostFunction : public dwa_local_planner::TrajectoryCostFunction {
 public:
 
   /**
@@ -33,4 +33,4 @@ public:
 }
 
 
-PLUGINLIB_EXPORT_CLASS(dwa_plugins::MinimizeY, dwa_local_planner::TrajectoryCostFunction)
+PLUGINLIB_EXPORT_CLASS(dwa_plugins::MinimizeYCostFunction, dwa_local_planner::TrajectoryCostFunction)
