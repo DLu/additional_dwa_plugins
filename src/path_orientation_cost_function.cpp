@@ -70,9 +70,9 @@ double PathOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
       ROS_WARN("Off Map %f, %f", px, py);
       return -4.0;
   }
-  
-  unsigned int path_index = map_(px, py).index;
-  return angles::shortest_angular_distance(pth, yaws_[path_index]);
+
+  unsigned int path_index = map_(cell_x, cell_y).index;
+  return fabs(angles::shortest_angular_distance(pth, yaws_[path_index]));
 }
 
 void PathOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs::PoseStamped>& orig_global_plan, double goal_x, double goal_y)
@@ -80,7 +80,7 @@ void PathOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs:
   target_poses_ = orig_global_plan;
   if(target_poses_.size()==0)
       return;
-   
+  yaws_.clear();
   double x0, y0, x1, y1;
   x0 = target_poses_[0].pose.position.x;
   y0 = target_poses_[0].pose.position.y;
@@ -101,3 +101,5 @@ void PathOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs:
 }
 
 } /* namespace dwa_local_planner */
+
+PLUGINLIB_EXPORT_CLASS(dwa_plugins::PathOrientationCostFunction, dwa_local_planner::TrajectoryCostFunction)
