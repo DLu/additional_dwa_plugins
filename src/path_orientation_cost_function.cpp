@@ -60,6 +60,9 @@ bool PathOrientationCostFunction::prepare(tf::Stamped<tf::Pose> global_pose,
 
 
 double PathOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
+  if(traj.getPointsSize()==0)
+    return 0.0;
+
   double px, py, pth;
   traj.getPoint(traj.getPointsSize()-1, px, py, pth);
 
@@ -72,6 +75,8 @@ double PathOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
   }
 
   unsigned int path_index = map_(cell_x, cell_y).index;
+    if(path_index==yaws_.size()-1)
+   return 0.0;
   return fabs(angles::shortest_angular_distance(pth, yaws_[path_index]));
 }
 
@@ -96,8 +101,6 @@ void PathOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs:
     y0 = y1;
   }
   yaws_.push_back(tf::getYaw(target_poses_[target_poses_.size()-1].pose.orientation));
-  
-
 }
 
 } /* namespace dwa_local_planner */
