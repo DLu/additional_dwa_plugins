@@ -62,6 +62,7 @@ public:
 protected:
   std::vector<geometry_msgs::PoseStamped> target_poses_;
   std::vector<double> yaws_;
+  double max_trans_angle_;
 
   ClosestTargetPointMap map_;
 

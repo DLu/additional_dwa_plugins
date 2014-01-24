@@ -46,6 +46,7 @@ void PathOrientationCostFunction::initialize(std::string name, base_local_planne
 
     ros::NodeHandle nh("~/" + name_);
     // nh.param("aggregation_type", aggro_str, std::string("last"));
+    nh.param("max_trans_angle", max_trans_angle_, M_PI);
 }
 
 bool PathOrientationCostFunction::prepare(tf::Stamped<tf::Pose> global_pose,
@@ -75,9 +76,13 @@ double PathOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
   }
 
   unsigned int path_index = map_(cell_x, cell_y).index;
-    if(path_index==yaws_.size()-1)
+  if(path_index==yaws_.size()-1)
    return 0.0;
-  return fabs(angles::shortest_angular_distance(pth, yaws_[path_index]));
+  double diff = fabs(angles::shortest_angular_distance(pth, yaws_[path_index]));
+  if(diff > max_trans_angle_ && (traj.xv_ > 0.0 || traj.yv_ > 0.0))
+    return -1.0;
+  else
+    return diff;
 }
 
 void PathOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs::PoseStamped>& orig_global_plan, double goal_x, double goal_y)
