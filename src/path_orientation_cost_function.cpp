@@ -46,6 +46,7 @@ void PathOrientationCostFunction::initialize(std::string name, base_local_planne
 
     ros::NodeHandle nh("~/" + name_);
     nh.param("max_trans_angle", max_trans_angle_, M_PI);
+    // TODO: Give the option to turn if the CURRENT angle is less than max_trans_angle
 }
 
 bool PathOrientationCostFunction::prepare(tf::Stamped<tf::Pose> global_pose,
