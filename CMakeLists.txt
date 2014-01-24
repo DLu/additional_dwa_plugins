@@ -11,4 +11,5 @@ rosbuild_add_library(${PROJECT_NAME}
   src/closest_target_point_map.cpp
   src/path_orientation_cost_function.cpp
   src/goal_orientation_cost_function.cpp
+  src/speed_cost_function.cpp
 )

@@ -15,6 +15,10 @@
 	   base_class_type="dwa_local_planner::TrajectoryCostFunction">
       <description></description>
     </class>
+    <class type="dwa_plugins::SpeedCostFunction"
+	   base_class_type="dwa_local_planner::TrajectoryCostFunction">
+      <description></description>
+    </class>
   </library>
 </class_libraries>
 
