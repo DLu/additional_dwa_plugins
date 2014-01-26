@@ -54,11 +54,10 @@ public:
 
   double scoreTrajectory(base_local_planner::Trajectory &traj);
 
-  virtual void setGlobalPlan(const std::vector<geometry_msgs::PoseStamped>& orig_global_plan, double goal_x, double goal_y);
-
 protected:
-  double target_speed_, goal_x_, goal_y_;
-
+  double target_speed_;
+  double command_factor_;
+  bool x_speed_only_;
 };
 
 }

@@ -46,6 +46,8 @@ void SpeedCostFunction::initialize(std::string name, base_local_planner::LocalPl
 
     ros::NodeHandle nh("~/" + name_);
     nh.param("target_speed", target_speed_, 0.5);
+    nh.param("command_factor", command_factor_, 1.0);
+    nh.param("x_speed_only", x_speed_only_, true);
 }
 
 bool SpeedCostFunction::prepare(tf::Stamped<tf::Pose> global_pose,
@@ -56,27 +58,14 @@ bool SpeedCostFunction::prepare(tf::Stamped<tf::Pose> global_pose,
 
 
 double SpeedCostFunction::scoreTrajectory(Trajectory &traj) {
-  if(traj.getPointsSize()==0)
-    return 0.0;
-    
-  double px, py, pth;
-  traj.getPoint(traj.getPointsSize()-1, px, py, pth);  
-  
-  double dist_to_goal = sqrt( pow(px-goal_x_,2) + pow(py-goal_y_,2) );
-  
-  if(dist_to_goal < target_speed_ * traj.getPointsSize() * traj.time_delta_){
-    return 0.0;
+ 
+  double abs_speed;
+  if(x_speed_only_){
+    abs_speed = traj.xv_;
+  } else {
+    abs_speed = sqrt( pow(traj.xv_, 2) + pow(traj.yv_, 2) );
   }
-  
-  double abs_speed = sqrt( pow(traj.xv_, 2) + pow(traj.yv_, 2) );
-
-  return fabs(abs_speed - target_speed_);
-}
-
-void SpeedCostFunction::setGlobalPlan(const std::vector<geometry_msgs::PoseStamped>& orig_global_plan, double goal_x, double goal_y)
-{
-    goal_x_ = goal_x;
-    goal_y_ = goal_y;
+  return fabs(abs_speed - target_speed_ / command_factor_);
 }
 
 } /* namespace dwa_local_planner */
