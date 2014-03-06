@@ -64,7 +64,7 @@ double GoalOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
   traj.getPoint(traj.getPointsSize()-1, px, py, pth);  
   
   double dist_to_goal = sqrt( pow(sx-goal_x_,2) + pow(sy-goal_y_,2) );
-  double angle_to_goal = atan2(goal_y_ - py, goal_x_ - px);
+  //double angle_to_goal = atan2(goal_y_ - py, goal_x_ - px);
   
   /*
   if(dist_to_goal < approach_dist_){
@@ -77,10 +77,8 @@ double GoalOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
   if(dist_to_goal>=approach_dist_){
     return 1.0;
   }
-  double aim_diff = fabs(angles::shortest_angular_distance(pth, angle_to_goal));
-  double scalar = aim_diff / M_PI;
-  return scalar;
-  
+  double aim_diff = fabs(angles::shortest_angular_distance(pth, goal_yaw_));
+  return aim_diff / M_PI;
 }
 
 void GoalOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs::PoseStamped>& orig_global_plan, double goal_x, double goal_y)
