@@ -57,21 +57,30 @@ bool GoalOrientationCostFunction::prepare(tf::Stamped<tf::Pose> global_pose,
 
 double GoalOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
   if(traj.getPointsSize()==0)
-    return 0.0;
+    return 1.0;
     
   double sx, sy, sth, px, py, pth;
   traj.getPoint(0, sx, sy, sth);
   traj.getPoint(traj.getPointsSize()-1, px, py, pth);  
   
   double dist_to_goal = sqrt( pow(sx-goal_x_,2) + pow(sy-goal_y_,2) );
-  
-  if(dist_to_goal < approach_dist_){
-    return fabs(angles::shortest_angular_distance(goal_yaw_, pth));
-  }
-
   double angle_to_goal = atan2(goal_y_ - py, goal_x_ - px);
   
-  return fabs(angles::shortest_angular_distance(pth, angle_to_goal));
+  /*
+  if(dist_to_goal < approach_dist_){
+    double weight = (approach_dist_ - dist_to_goal) / approach_dist_;
+    double target = angle_to_goal * (1.0 - weight) + goal_yaw_ * weight;
+    return fabs(angles::shortest_angular_distance(target, pth));  
+  }
+  double aim_diff = fabs(angles::shortest_angular_distance(pth, angle_to_goal));
+  return aim_diff;*/
+  if(dist_to_goal>=approach_dist_){
+    return 1.0;
+  }
+  double aim_diff = fabs(angles::shortest_angular_distance(pth, angle_to_goal));
+  double scalar = aim_diff / M_PI;
+  return scalar;
+  
 }
 
 void GoalOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs::PoseStamped>& orig_global_plan, double goal_x, double goal_y)
