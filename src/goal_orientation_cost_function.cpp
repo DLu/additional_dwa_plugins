@@ -65,7 +65,9 @@ double GoalOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
   
   double dist_to_goal = sqrt( pow(sx-goal_x_,2) + pow(sy-goal_y_,2) );
   //double angle_to_goal = atan2(goal_y_ - py, goal_x_ - px);
-  
+  if(dist_to_goal < .2 and (fabs(traj.xv_) > 0.0 || fabs(traj.yv_) > 0.0))
+    return -1.0;
+
   /*
   if(dist_to_goal < approach_dist_){
     double weight = (approach_dist_ - dist_to_goal) / approach_dist_;
