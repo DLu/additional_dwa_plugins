@@ -49,16 +49,6 @@ void PathOrientationCostFunction::initialize(std::string name, base_local_planne
     // TODO: Give the option to turn if the CURRENT angle is less than max_trans_angle
 }
 
-bool PathOrientationCostFunction::prepare(tf::Stamped<tf::Pose> global_pose,
-      tf::Stamped<tf::Pose> global_vel,
-      std::vector<geometry_msgs::Point> footprint_spec) {
-  map_.reset();
-  
-  map_.setTargetCells(*costmap_, target_poses_);
-  
-  return true;
-}
-
 
 double PathOrientationCostFunction::scoreTrajectory(Trajectory &traj) {
   if(traj.getPointsSize()==0)
@@ -105,6 +95,9 @@ void PathOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs:
     x0 = x1;
     y0 = y1;
   }
+ 
+  map_.reset();  
+  map_.setTargetCells(*costmap_, target_poses_);
 }
 
 } /* namespace dwa_local_planner */

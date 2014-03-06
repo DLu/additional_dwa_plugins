@@ -53,7 +53,7 @@ public:
   void initialize(std::string name, base_local_planner::LocalPlannerUtil *planner_util);
   virtual bool prepare(tf::Stamped<tf::Pose> global_pose,
 		       tf::Stamped<tf::Pose> global_vel,
-		       std::vector<geometry_msgs::Point> footprint_spec);
+		       std::vector<geometry_msgs::Point> footprint_spec) { return true; }
 
   double scoreTrajectory(base_local_planner::Trajectory &traj);
 
