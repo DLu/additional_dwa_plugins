@@ -78,8 +78,12 @@ public:
       double start_diff;
       if(!getAngleDiff(px,py,pth,&start_diff))
         return -4.0;
-           
-      if(fabs(start_diff) > max_trans_angle_ && (fabs(traj.xv_) > 0.0 || fabs(traj.yv_) > 0.0))
+
+      if(fabs(start_diff) < max_trans_angle_){
+	return 0.0;
+      }
+
+      if(fabs(traj.xv_) > 0.0 || fabs(traj.yv_) > 0.0)
         return -3.0;
       else if( sign(start_diff) != sign(traj.thetav_) )
         return -2.0;
@@ -104,7 +108,8 @@ public:
 
       unsigned int path_index = map_(cell_x, cell_y).index;
       if(path_index>=yaws_.size())
-       return false;
+	return false;
+
       *diff = angles::shortest_angular_distance(pth, yaws_[path_index]);
       return true;
   }
