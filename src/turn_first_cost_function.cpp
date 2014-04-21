@@ -74,27 +74,39 @@ public:
         return 0.0;
 
       double px, py, pth;
+      traj.getPoint(0, px, py, pth);
+      double start_diff;
+      if(!getAngleDiff(px,py,pth,&start_diff))
+        return -4.0;
+           
+      if(fabs(start_diff) > max_trans_angle_ && (fabs(traj.xv_) > 0.0 || fabs(traj.yv_) > 0.0))
+        return -3.0;
+      else if( sign(start_diff) != sign(traj.thetav_) )
+        return -2.0;
+        
       traj.getPoint(traj.getPointsSize()-1, px, py, pth);
-
+      double end_diff;
+      if(!getAngleDiff(px,py,pth,&end_diff))
+        return -1.0;
+        
+      return fabs(end_diff);
+  }
+  
+  bool getAngleDiff(double px, double py, double pth, double* diff)
+  {
       unsigned int cell_x, cell_y;
       //we won't allow trajectories that go off the map... shouldn't happen that often anyways
       if ( ! costmap_->worldToMap(px, py, cell_x, cell_y)) {
           //we're off the map
           ROS_WARN("Off Map %f, %f", px, py);
-          return -4.0;
+          return false;
       }
 
       unsigned int path_index = map_(cell_x, cell_y).index;
       if(path_index>=yaws_.size())
-       return 0.0;
-      double diff = angles::shortest_angular_distance(pth, yaws_[path_index]);
-      if(fabs(diff) > max_trans_angle_ && (fabs(traj.xv_) > 0.0 || fabs(traj.yv_) > 0.0))
-        return -1.0;
-        
-      if( sign(diff) != sign(traj.thetav_) )
-        return -1.0;
-      else
-        return fabs(diff);
+       return false;
+      *diff = angles::shortest_angular_distance(pth, yaws_[path_index]);
+      return true;
   }
 
   virtual void debrief(base_local_planner::Trajectory &result) {}
