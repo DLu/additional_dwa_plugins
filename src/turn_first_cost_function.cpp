@@ -60,6 +60,10 @@ public:
         x0 = x1;
         y0 = y1;
       }
+      
+      geometry_msgs::PoseStamped goal = orig_global_plan[ orig_global_plan.size() - 1];
+      goal_x_ = goal.pose.position.x;
+      goal_y_ = goal.pose.position.y;
      
       map_.reset();  
       map_.setTargetCells(*costmap_, target_poses_);
@@ -75,6 +79,13 @@ public:
 
       double px, py, pth;
       traj.getPoint(0, px, py, pth);
+      
+      double dist_to_goal = hypot(px-goal_x_, py-goal_y_);
+      if(dist_to_goal < .2){
+        return 0.0;
+      }
+
+      
       double start_diff;
       if(!getAngleDiff(px,py,pth,&start_diff))
         return -4.0;
@@ -121,7 +132,7 @@ public:
 
   std::vector<geometry_msgs::PoseStamped> target_poses_;
   std::vector<double> yaws_;
-  double max_trans_angle_;
+  double max_trans_angle_, goal_x_, goal_y_;
 
   ClosestTargetPointMap map_;
 
