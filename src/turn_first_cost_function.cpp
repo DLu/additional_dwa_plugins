@@ -88,7 +88,7 @@ public:
       if(path_index>=yaws_.size())
        return 0.0;
       double diff = angles::shortest_angular_distance(pth, yaws_[path_index]);
-      if(fabs(diff) > max_trans_angle_ && (traj.xv_ > 0.0 || traj.yv_ > 0.0))
+      if(fabs(diff) > max_trans_angle_ && (fabs(traj.xv_) > 0.0 || fabs(traj.yv_) > 0.0))
         return -1.0;
         
       if( sign(diff) != sign(traj.thetav_) )
