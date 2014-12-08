@@ -81,19 +81,10 @@ void PathOrientationCostFunction::setGlobalPlan(const std::vector<geometry_msgs:
   if(target_poses_.size()==0)
       return;
   yaws_.clear();
-  double x0, y0, x1, y1;
-  x0 = target_poses_[0].pose.position.x;
-  y0 = target_poses_[0].pose.position.y;
   
-  for(unsigned int i=0; i<target_poses_.size()-1;i++){
-    x1 = target_poses_[i+1].pose.position.x;
-    y1 = target_poses_[i+1].pose.position.y;
-    
-    double angle = atan2(y1-y0,x1-x0);
+  for(unsigned int i=0; i<target_poses_.size();i++){
+    double angle = tf::getYaw(target_poses_[i].pose.orientation);
     yaws_.push_back(angle);
-    
-    x0 = x1;
-    y0 = y1;
   }
  
   map_.reset();  
